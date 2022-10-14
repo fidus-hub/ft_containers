@@ -61,11 +61,51 @@
 		// 23.2.4.2 capacity:
 		size_type size() const
 		{
-			return size_;
+			return (size_);
 		}
 		size_type max_size() const;
-		void resize(size_type sz, T c = T()); size_type capacity() const;
-		bool empty()const;
+		{
+			return _alloc.max_size()
+		}
+		size_type capacity() const
+		{
+			return (capacity_);
+		}
+		bool empty()const
+		{
+			return (size_ == 0);
+		}
+		void resize (size_type n, value_type val = value_type())
+		{
+			if(n < size_)
+			{
+				size_t i = size_;
+				while(i > n)
+				{
+					alloc_.destroy(&buffer_[i]);
+					i--;
+				}
+			}
+			if(n > size_)
+			{
+				reserve(n);
+				size_t i = size_;
+				while(i < n)
+				{
+					alloc_.contruct(&buffer_[i],val);
+					i++;
+				}
+			}
+			size_ = n;
+		}
+		// void resize (size_type n, value_type val = value_type())
+		// {
+		// 	while(n < size_)
+		// 		pop_back();
+		// 	while (n > size_)
+		// 		push_back(val);
+		// }
+
 		void reserve(size_type n)
 		{
 			if (n > capacity_)
@@ -74,8 +114,8 @@
 				int i = 0;
 				while (i < size_)
 				{
-					alloc_.contruct(&tmp[i],buffer_[i]);
-					alloc_.destroy(&buff[i]);
+					alloc_.construct(&tmp[i],buffer_[i]);
+					alloc_.destroy(&buffer_[i]);
 					i++;
 				}
 				alloc_.deallocate(buffer_,capacity_);
@@ -87,24 +127,87 @@
 
 
 			// element access:
-		reference operator[](size_typen); const_reference operator[](size_type n) const; const_reference at(size_type n) const; reference at(size_typen);
-		reference front();
-		const_reference front() const;
-		reference back();
-		const_reference back() const;
+		reference operator[](size_type n)
+		{
+			return buffer_[n];
+		}
+		const_reference operator[](size_type n) const
+		{
+			return buffer_[n];
+		}
+		const_reference at(size_type n) const
+		{
+			if(n > capacity_)
+				throw std::out_of_range("vector out of range");
+			return buffer_[n];
+		}
+		reference at(size_typen)
+		{
+			if(n > capacity_)
+				throw std::out_of_range("vector out of range");
+			return buffer_[n];
+		}
+		reference front()
+		{
+			return buffer_[0];
+		}
+		const_reference front() const
+		{
+			return buffer_[0];
+		}
+		reference back()
+		{
+			return buffer_[size_ -1];
+		}
+		const_reference back() const
+		{
+			return buffer_[size_ -1];
+		}
 
 
 		// 23.2.4.3 modifiers:
-		void push_back(const T& x);
-		void pop_back();
+		void push_back(const t& val)
+		{
+			if(size_ == capacity_)
+				reserve(capacity_ == 0 ? 1 : capacity_ * 2);
+			buffer_[size_ + 1] = val;
+			++size_;
+		}
+		void pop_back()
+		{
+			alloc_.destroy(&buffer_[size_])
+			size_--;
+		}
+		void swap (vector& x)
+		{
+			size_t			tmpSize = size_;
+			size_t			tmpCapacity = capacity_;
+			value_type		*tmpBuffer = buffer_;
+
+			size_		=	x.size_;
+			capacity_	=	x.capacity_;
+			buffer_		=	x.buffer_;
+
+			x.size_		=	tmpSize;
+			x.capacity_	=	tmpCapacity;
+			x.buffer_	=	tmpBuffer;
+		}
+		void	clear()
+		{
+			int i = 0;
+			while(i < size_)
+			{
+				alloc_.destroy(&buffer_[i])
+				i++;
+			}
+			size_ = 0;
+		}
 		iterator insert(iterator position, const T& x);
 		void insert(iterator position, size_type n, const T& x);
 			template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
-        void     swap(vector<T,Allocator>&);
-        void     clear();
+		void insert(iterator position, InputIterator first, InputIterator last);
+		iterator erase(iterator position);
+		iterator erase(iterator first, iterator last);
 
 		private:
 			size_t size_;

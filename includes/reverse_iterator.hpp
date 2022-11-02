@@ -9,6 +9,7 @@ namespace ft
 	class reverse_iterator
 	{
 		public :
+			typedef T																				iterator_type; 
 			typedef T																				value_type;
 			typedef T*																				pointer;
 			typedef T&																				reference;
@@ -91,7 +92,7 @@ namespace ft
 
 
 		protected:
-			pointer itr_ptr; 
+			iterator_type itr_ptr; 
 	};
 	template <class T>
 	bool operator== (const reverse_iterator<T>& lhs, const reverse_iterator<T>& rhs)

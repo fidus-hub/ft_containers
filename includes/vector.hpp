@@ -8,16 +8,16 @@
 		public :
 		typedef typename Allocator::reference 		reference;
 		typedef typename Allocator::const_reference const_reference;
-		// typedef typename ft::random_access_iterator<T>  iterator;
-		// typedef typename ft::random_access_iterator<const T>    const_iterator;
+		typedef typename ft::random_access_iterator<T>  iterator;
+		typedef typename ft::random_access_iterator<const T>    const_iterator;
 		// typedef implementation defined
 		// typedef implementation defined
 		typedef T									value_type;
 		typedef Allocator							allocator_type;
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer	const_pointer;
-		//typedef ft::reverse_iterator<iterator>		reverse_iterator;
-		//typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+		typedef ft::reverse_iterator<iterator>		reverse_iterator;
+		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 		
 
 		//Constructors
@@ -48,14 +48,38 @@
 
 
 		// iterators:
-		// iterator begin();
-		// const_iterator begin()const;
-		// iterator end();
-		// const_iterator end()const;
-		// reverse_iterator rbegin();
-		// const_reverse_iterator rbegin() const;
-		// reverse_iterator rend();
-		// const_reverse_iterator rend() const;
+		iterator begin()
+		{
+			return iterator(buffer_);
+		}
+		const_iterator begin()const
+		{
+			return const_iterator(buffer_);
+		}
+		iterator end()
+		{
+			return iterator(buffer_ + size_)
+		}
+		const_iterator end()const
+		{
+			return const_iterator(buffer_ + size_)
+		}
+		reverse_iterator rbegin()
+		{
+
+		}
+		const_reverse_iterator rbegin() const
+		{
+
+		}
+		reverse_iterator rend()
+		{
+
+		}
+		const_reverse_iterator rend() const
+		{
+
+		}
 
 
 		// 23.2.4.2 capacity:

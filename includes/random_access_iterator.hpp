@@ -128,7 +128,7 @@ namespace ft
 		return (rand + n);
 	}
 	template <class T>
-	typename random_access_iterator<T>::difference_type operator- (const random_access_iterator<T> lhs, const random_access_iterator<T> rhs)
+	typename random_access_iterator<T>::difference_type operator- (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() - rhs.get_pointer());
 	}

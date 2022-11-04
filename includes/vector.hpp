@@ -29,22 +29,37 @@
        ~vector();
 
 		//Operators
-        vector<T,Allocator>& operator=(const vector<T,Allocator>& x);
+		vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
+		{
+			size_ = x.size_;
+			capacity_ = x.capacity_;
+			buffer_ = alloc_.allocate(capacity_);
+			size_t i = 0;
+			while(i < size_)
+			{
+				alloc_.construct(&buffer_[i], x.buffer_[i]);
+				i++;
+			}
+			return *this;
+		}
 
-        // 	template <class InputIterator>
-        // void assign(InputIterator first, InputIterator last)
-		// {
-		// 	erase(begin(),end());
-		// 	insert(begin(),first,last);
+		template <class InputIterator>
+		void assign(InputIterator first, InputIterator last)
+		{
+			erase(begin(),end());
+			insert(begin(),first,last);
 
-		// }
+		}
 	
-        // void assign(size_type n, const T& u)
-		// {
-		// 	erase(begin(),end());
-		// 	insert(begin(),n, u);
-		// }
-        allocator_type get_allocator() const;
+		void assign(size_type n, const T& value)
+		{
+			erase(begin(),end());
+			insert(begin(),n, value);
+		}
+		//allocator_type get_allocator() const
+		//{
+
+		//}
 
 
 		// iterators:
@@ -230,14 +245,27 @@
 		void insert(iterator position, size_type n, const T& x);
 			template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last);
-		iterator erase(iterator position);
-		iterator erase(iterator first, iterator last);
+		iterator erase(iterator position)
+		{
+			size_t len = 0;
+			if (position.get_pointer())
+				len = std::distance(begin(),position);
+			_alloc.destroy(&_buff[len]);
+			--_size;
+			return position;
+		}
+		iterator erase(iterator first, iterator last)
+		{
+			size_t len = 0;
+			if (position.get_pointer())
+				len = std::distance(first,last);
+		}
 
 		private:
-			size_t size_;
-			size_t capacity_;
-			allocator_type alloc_;
-			pointer		buffer_;
+			size_t 			size_;
+			size_t 			capacity_;
+			allocator_type 	alloc_;
+			pointer			buffer_;
 			
 	 };
 

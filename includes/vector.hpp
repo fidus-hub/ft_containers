@@ -250,15 +250,30 @@
 			size_t len = 0;
 			if (position.get_pointer())
 				len = std::distance(begin(),position);
-			_alloc.destroy(&_buff[len]);
+			_alloc.destroy(&buffer_[len]);
+			size_t i = len;
+			while(i < size_ - 1)
+			{
+				buffer_[i] = buffer_[i + 1];
+			}
 			--_size;
 			return position;
 		}
 		iterator erase(iterator first, iterator last)
 		{
-			size_t len = 0;
-			if (position.get_pointer())
-				len = std::distance(first,last);
+			size_t dis = 0;
+			size_t	len = 0;
+			if (position.get_pointer()
+			{
+				des = std::distance(first,last);
+				len = std::distance(begin(),first);
+			}
+			for(int i = len; i < len + des; i++)
+				_alloc.destroy(&buffer_[i]);
+			for(int i = len; i < size_ - des; i++)
+				buffer_[i] = buffer_[i + des];
+			size_ -= des;
+			return iterator(&buffer_[len]);
 		}
 
 		private:

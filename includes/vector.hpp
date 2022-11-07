@@ -1,5 +1,6 @@
  #include <iostream>
  
+
  namespace ft 
  {
 	 template <class T, class Allocator = std::allocator<T> >
@@ -241,10 +242,30 @@
 			}
 			size_ = 0;
 		}
-		iterator insert(iterator position, const T& x);
-		void insert(iterator position, size_type n, const T& x);
+		iterator insert(iterator position, const T& val)
+		{
+			size_t len = 0;
+			if (position.get_pointer())
+				len = std::distance(begin(),position);
+			_size =+ 1;
+			size_t i = size;
+			while(i > len)
+			{
+				buffer_[i] = buffer_[i - 1];
+			}
+			i--;
+			buffer_[len] = val;
+			return &buffer_[len];
+		}
+		void insert(iterator position, size_type n, const T& val)
+		{
+
+		}
 			template <class InputIterator>
-		void insert(iterator position, InputIterator first, InputIterator last);
+		void insert(iterator position, InputIterator first, InputIterator last)
+		{
+
+		}
 		iterator erase(iterator position)
 		{
 			size_t len = 0;
@@ -256,18 +277,17 @@
 			{
 				buffer_[i] = buffer_[i + 1];
 			}
+			i++;
 			--_size;
 			return position;
 		}
 		iterator erase(iterator first, iterator last)
 		{
 			size_t dis = 0;
-			size_t	len = 0;
-			if (position.get_pointer()
-			{
-				des = std::distance(first,last);
-				len = std::distance(begin(),first);
-			}
+			size_t len = 0;
+
+			des = std::distance(first,last);
+			len = std::distance(begin(),first);
 			for(int i = len; i < len + des; i++)
 				_alloc.destroy(&buffer_[i]);
 			for(int i = len; i < size_ - des; i++)

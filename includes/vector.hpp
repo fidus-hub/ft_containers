@@ -274,7 +274,16 @@
 			template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last)
 		{
-
+			size_t n = last - first;
+			size_t len = std::distance(begin(), position);
+			size_ += n;
+			if (size_ >= capacity_)
+				reserve (capacity_ * 2)
+			for(size_t i = size_; i > len; i--)
+				buffer_[i] = buffer_[i - n];
+			for(size_t i = len; i < len + n && first != last; i++,first++)
+				buffer_[i] = *first;
+				//alloc_.construct(&buffer_[i],*first);
 		}
 		iterator erase(iterator position)
 		{

@@ -11,8 +11,6 @@
 		typedef typename Allocator::const_reference const_reference;
 		typedef typename ft::random_access_iterator<T>  iterator;
 		typedef typename ft::random_access_iterator<const T>    const_iterator;
-		// typedef implementation defined
-		// typedef implementation defined
 		typedef T									value_type;
 		typedef Allocator							allocator_type;
 		typedef typename Allocator::pointer			pointer;
@@ -57,10 +55,10 @@
 			erase(begin(),end());
 			insert(begin(),n, value);
 		}
-		//allocator_type get_allocator() const
-		//{
-
-		//}
+		allocator_type get_allocator() const
+		{
+			return alloc_ ;
+		}
 
 
 		// iterators:
@@ -177,13 +175,13 @@
 		}
 		const_reference at(size_type n) const
 		{
-			if(n > capacity_)
+			if(n > size_)
 				throw std::out_of_range("vector out of range");
 			return buffer_[n];
 		}
-		reference at(size_typen)
+		reference at(size_type n)
 		{
-			if(n > capacity_)
+			if(n > size_)
 				throw std::out_of_range("vector out of range");
 			return buffer_[n];
 		}

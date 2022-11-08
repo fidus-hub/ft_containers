@@ -244,11 +244,11 @@
 		}
 		iterator insert(iterator position, const T& val)
 		{
-			size_t len = 0;
-			if (position.get_pointer())
-				len = std::distance(begin(),position);
-			_size =+ 1;
-			size_t i = size;
+			size_t len = std::distance(begin(),position);
+			size_ += 1;
+			if (size_ >= capacity_)
+				reserve (capacity_ * 2)
+			size_t i = size_;
 			while(i > len)
 			{
 				buffer_[i] = buffer_[i - 1];
@@ -259,7 +259,19 @@
 		}
 		void insert(iterator position, size_type n, const T& val)
 		{
-
+			size_t len = std::distance(begin(),position);
+			size_ += n;
+			if (size_ >= capacity_)
+				reserve (capacity_ * 2)
+			size_t i = size_;
+			while(i > len)
+			{
+				buffer_[i] = buffer_[i - n];
+				i--;
+			}
+			for(j = (len + n); j > len; j--)
+				buffer_[j] = val;
+			return &buffer_[len];
 		}
 			template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last)

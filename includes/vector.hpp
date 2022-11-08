@@ -252,8 +252,8 @@
 			while(i > len)
 			{
 				buffer_[i] = buffer_[i - 1];
+				i--;
 			}
-			i--;
 			buffer_[len] = val;
 			return &buffer_[len];
 		}
@@ -268,32 +268,48 @@
 		}
 		iterator erase(iterator position)
 		{
-			size_t len = 0;
-			if (position.get_pointer())
-				len = std::distance(begin(),position);
-			_alloc.destroy(&buffer_[len]);
+			//size_t len = std::distance(begin(),position);
+			//_alloc.destroy(&buffer_[len]);
+			//size_t i = len;
+			//while(i < size_ - 1)
+			//{
+			//	buffer_[i] = buffer_[i + 1];
+			//	i++;
+			//}
+			//--_size;
+			//return position;
+
+			size_t len = std::distance(begin(),position);
 			size_t i = len;
 			while(i < size_ - 1)
 			{
-				buffer_[i] = buffer_[i + 1];
+				std::swap(buffer_[i], buffer_[i + 1]);
+				i++;
 			}
-			i++;
-			--_size;
-			return position;
+			_alloc.destroy(&buffer_[size_ - 1]);
+			size_ - 1;
+			return (position);
 		}
 		iterator erase(iterator first, iterator last)
 		{
-			size_t dis = 0;
-			size_t len = 0;
+			size_t len = std::distance(first,last);
+			for (size_t i = 0 ; i < len ; i++)
+			{
+				erase(first);
+			}
+			return (first);
 
-			des = std::distance(first,last);
-			len = std::distance(begin(),first);
-			for(int i = len; i < len + des; i++)
-				_alloc.destroy(&buffer_[i]);
-			for(int i = len; i < size_ - des; i++)
-				buffer_[i] = buffer_[i + des];
-			size_ -= des;
-			return iterator(&buffer_[len]);
+			// size_t dis = 0;
+			// size_t len = 0;
+
+			// des = std::distance(first,last);
+			// len = std::distance(begin(),first);
+			// for(int i = len; i < len + des; i++)
+			// 	_alloc.destroy(&buffer_[i]);
+			// for(int i = len; i < size_ - des; i++)
+			// 	buffer_[i] = buffer_[i + des];
+			// size_ -= des;
+			// return iterator(&buffer_[len]);
 		}
 
 		private:

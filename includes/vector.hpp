@@ -1,4 +1,7 @@
  #include <iostream>
+ #include "random_access_iterator.hpp"
+ #include "reverse_iterator.hpp"
+ #include "utils.hpp"
  
 
  namespace ft 
@@ -16,6 +19,7 @@
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer	const_pointer;
 		typedef ft::reverse_iterator<iterator>		reverse_iterator;
+		typedef size_t								size_type;
 		typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 		
 
@@ -39,7 +43,7 @@
 			template <class InputIterator>
 		vector(InputIterator first, InputIterator last,const Allocator& alloc = Allocator())
 		{
-			size_t n = std::distance(first,last);
+			size_t n = last - first;
 			alloc_ = alloc;
 			size_ = n;
 			capacity_ = n;
@@ -51,9 +55,9 @@
 		{
 			size_ = x.size_;
 			capacity_ = x.capacity_;
-			buffer_ = _alloc.allocate(capacity_);
+			buffer_ = alloc_.allocate(capacity_);
 			for (size_t i = 0 ; i < size_ ; i++)
-				_alloc.construct(&buffer_[i], x.buffer_[i]);
+				alloc_.construct(&buffer_[i], x.buffer_[i]);
 		}
 		~vector()
 		{
@@ -107,11 +111,11 @@
 		}
 		iterator end()
 		{
-			return iterator(buffer_ + size_)
+			return iterator(buffer_ + size_);
 		}
 		const_iterator end()const
 		{
-			return const_iterator(buffer_ + size_)
+			return const_iterator(buffer_ + size_);
 		}
 		reverse_iterator rbegin()
 		{
@@ -127,7 +131,7 @@
 		}
 		const_reverse_iterator rend() const
 		{
-			return const_reverse_iterator(const_iterator(buffer_)));
+			return const_reverse_iterator(const_iterator(buffer_));
 		}
 
 
@@ -136,9 +140,9 @@
 		{
 			return (size_);
 		}
-		size_type max_size() const;
+		size_type max_size() const
 		{
-			return _alloc.max_size()
+			return alloc_.max_size();
 		}
 		size_type capacity() const
 		{
@@ -192,7 +196,7 @@
 					i++;
 				}
 				alloc_.deallocate(buffer_,capacity_);
-				buff = tmp;
+				buffer_ = tmp;
 				capacity_ = n;
 			}
 
@@ -239,7 +243,7 @@
 
 
 		// 23.2.4.3 modifiers:
-		void push_back(const t& val)
+		void push_back(const T& val)
 		{
 			if(size_ == capacity_)
 				reserve(capacity_ == 0 ? 1 : capacity_ * 2);
@@ -270,7 +274,7 @@
 			int i = 0;
 			while(i < size_)
 			{
-				alloc_.destroy(&buffer_[i])
+				alloc_.destroy(&buffer_[i]);
 				i++;
 			}
 			size_ = 0;
@@ -280,7 +284,7 @@
 			size_t len = std::distance(begin(),position);
 			size_ += 1;
 			if (size_ >= capacity_)
-				reserve (capacity_ * 2)
+				reserve (capacity_ * 2);
 			size_t i = size_;
 			while(i > len)
 			{
@@ -295,14 +299,14 @@
 			size_t len = std::distance(begin(),position);
 			size_ += n;
 			if (size_ >= capacity_)
-				reserve (capacity_ * 2)
+				reserve (capacity_ * 2);
 			size_t i = size_;
 			while(i > len)
 			{
 				buffer_[i] = buffer_[i - n];
 				i--;
 			}
-			for(j = (len + n); j > len; j--)
+			for(size_t j = (len + n); j > len; j--)
 				buffer_[j] = val;
 			return &buffer_[len];
 		}
@@ -313,7 +317,7 @@
 			size_t len = std::distance(begin(), position);
 			size_ += n;
 			if (size_ >= capacity_)
-				reserve (capacity_ * 2)
+				reserve (capacity_ * 2);
 			for(size_t i = size_; i > len; i--)
 				buffer_[i] = buffer_[i - n];
 			for(size_t i = len; i < len + n && first != last; i++,first++)
@@ -340,7 +344,7 @@
 				std::swap(buffer_[i], buffer_[i + 1]);
 				i++;
 			}
-			_alloc.destroy(&buffer_[size_ - 1]);
+			alloc_.destroy(&buffer_[size_ - 1]);
 			size_ - 1;
 			return (position);
 		}
@@ -391,7 +395,7 @@
 		if (x[i] != y[i])
 			return true;
 		}
-		false;
+		return false;
 	}
 		template <class T, class Allocator>
 	bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
@@ -423,15 +427,4 @@
 	{
 		x.swap(y);
 	}
- }
-
- int main()
- {
-	//  ft::vector<int>  amine(10,15);
-
-	//  ft::vector<int> copy_amine;
-	//  copy_amine(amine.begin(),  amine.end());
-	//  amine.push_back(10);
-	// ft::vector<int>::iterator it;
-
  }

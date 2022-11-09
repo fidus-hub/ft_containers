@@ -13,8 +13,8 @@ namespace ft
 			typedef T																				value_type;
 			typedef T*																				pointer;
 			typedef T&																				reference;
-			typedef typename ft::iterator_traits<std::reverse_iterator_tag, T>::difference_type		difference_type;
-			typedef typename ft::iterator_traits<std::reverse_iterator_tag, T>::iterator_category	iterator_category;
+			typedef typename ft::iterator_traits<T>::difference_type		difference_type;
+			typedef typename ft::iterator_traits<T>::iterator_category	iterator_category;
 
 			reverse_iterator() : itr_ptr(nullptr) {}
 
@@ -44,50 +44,50 @@ namespace ft
 			}
 
 
-			random_access_iterator& operator++()
+			reverse_iterator& operator++()
 			{
 				itr_ptr--;
 				return *this;
 			}
-			random_access_iterator& operator++(int)
+			reverse_iterator& operator++(int)
 			{
-				random_access_iterator tmp(itr_ptr);
+				reverse_iterator tmp(itr_ptr);
 				itr_ptr--;
 				return tmp;
 			}
-			random_access_iterator& operator--()
+			reverse_iterator& operator--()
 			{
 				itr_ptr++;
 				return *this;
 			}
-			random_access_iterator& operator--(int)
+			reverse_iterator& operator--(int)
 			{
-				random_access_iterator tmp(itr_ptr);
+				reverse_iterator tmp(itr_ptr);
 				operator++();
 				return tmp;
 			}
-			random_access_iterator operator+(difference_type n) const
+			reverse_iterator operator+(difference_type n) const
 			{
 				return (itr_ptr - n);
 			}
-			random_access_iterator operator-(difference_type n) const
+			reverse_iterator operator-(difference_type n) const
 			{
 				return (itr_ptr + n);
 			}
-			random_access_iterator operator+=(difference_type n)
+			reverse_iterator operator+=(difference_type n)
 			{
 				itr_ptr -= n;
 				return *this;
 			}
-			random_access_iterator operator-=(difference_type n)
+			reverse_iterator operator-=(difference_type n)
 			{
 				itr_ptr += n;
 				return *this;
 			}
 
-			operator random_access_iterator<const value_type>() const
+			operator reverse_iterator<const value_type>() const
 			{
-				return random_access_iterator<const value_type>(itr_ptr);
+				return reverse_iterator<const value_type>(itr_ptr);
 			}
 
 

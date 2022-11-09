@@ -20,12 +20,47 @@
 		
 
 		//Constructors
-		explicit vector(const Allocator& = Allocator());
-		explicit vector(size_type n, const T& value = T(), const Allocator& = Allocator());
-        	template <class InputIterator>
-        vector(InputIterator first, InputIterator last,const Allocator& = Allocator());
-        vector(const vector<T,Allocator>& x);
-       ~vector();
+		explicit vector(const Allocator& alloc = Allocator())
+		{
+			size_ = 0;
+			capacity_ = 0;
+			alloc_ = alloc;
+			buffer_ = NULL;
+		}
+		explicit vector(size_type n, const T& value = T(), const Allocator& alloc = Allocator())
+		{
+			size_ = n;
+			capacity_ = n;
+			alloc_ = alloc;
+			buffer_ = alloc_.allocate(n);
+			for(size_t i = 0; i < n; i++)
+				alloc_.construct(buffer_[i], value);
+		}
+			template <class InputIterator>
+		vector(InputIterator first, InputIterator last,const Allocator& alloc = Allocator())
+		{
+			size_t n = std::distance(first,last);
+			alloc_ = alloc;
+			size_ = n;
+			capacity_ = n;
+			buffer_ = alloc_.allocate(n);
+			for(size_t i = 0; first != last; i++,first++)
+				buffer_[i] = *first;
+		}
+		vector(const vector<T,Allocator>& x)
+		{
+			size_ = x.size_;
+			capacity_ = x.capacity_;
+			buffer_ = _alloc.allocate(capacity_);
+			for (size_t i = 0 ; i < size_ ; i++)
+				_alloc.construct(&buffer_[i], x.buffer_[i]);
+		}
+		~vector()
+		{
+			alloc_.deallocate(buffer_, capacity_);
+			for (size_t i = 0; i < size_; i++)
+				alloc_.destroy(&buffer_[i]);
+		}
 
 		//Operators
 		vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
@@ -213,7 +248,7 @@
 		}
 		void pop_back()
 		{
-			alloc_.destroy(&buffer_[size_])
+			alloc_.destroy(&buffer_[size_]);
 			size_--;
 		}
 		void swap (vector& x)

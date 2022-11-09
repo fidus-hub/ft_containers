@@ -372,23 +372,57 @@
 			allocator_type 	alloc_;
 			pointer			buffer_;
 			
-	 };
+	};
 
+		template <class T, class Allocator>
+	bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	{
+		if (x.size() != y.size())
+			return false;
+		return (ft::equal(x.begin(), x.end(), y.begin()));
+	}
+		template <class T, class Allocator>
+	bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	{
+		if (x.size() != y.size())
+			return true;
+		for (size_t i = 0 ; i < x.size() ; i++)
+		{
+		if (x[i] != y[i])
+			return true;
+		}
+		false;
+	}
+		template <class T, class Allocator>
+	bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	{
+		return (ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
+	}
+		template <class T, class Allocator>
+	bool operator> (const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	{
+		return (ft::lexicographical_compare(y.begin(), y.end(), x.begin(), x.end()));
+	}
+		template <class T, class Allocator>
+	bool operator>=(const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	{
+		if (x > y || x == y)
+			return (true);
+		return (false);
+	}
+		template <class T, class Allocator>
+	bool operator<=(const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	{
+		if (x < y || x == y)
+			return (true);
+		return (false);
+	}
 
-
-    //   template <class T, class Allocator>
-    //     bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
-    //   template <class T, class Allocator>
-    //     bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y);
-    //   template <class T, class Allocator>
-    //     bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y);
-    //   template <class T, class Allocator>
-    //     bool operator> (const vector<T,Allocator>& x,const vector<T,Allocator>& y);
-    //   template <class T, class Allocator>
-    //     bool operator>=(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
-    //   template <class T, class Allocator>
-    //     bool operator<=(const vector<T,Allocator>& x,const vector<T,Allocator>& y);
-
+		template <class T, class Alloc>
+	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	{
+		x.swap(y);
+	}
  }
 
  int main()

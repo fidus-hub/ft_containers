@@ -7,7 +7,7 @@
  namespace ft 
  {
 	 template <class T, class Allocator = std::allocator<T> >
-	 class vector 
+	 class Vector 
 	 {
 		public :
 		typedef typename Allocator::reference 		reference;
@@ -24,14 +24,14 @@
 		
 
 		//Constructors
-		explicit vector(const Allocator& alloc = Allocator())
+		explicit Vector(const Allocator& alloc = Allocator())
 		{
 			size_ = 0;
 			capacity_ = 0;
 			alloc_ = alloc;
 			buffer_ = NULL;
 		}
-		explicit vector(size_type n, const T& value = T(), const Allocator& alloc = Allocator())
+		explicit Vector(size_type n, const T& value = T(), const Allocator& alloc = Allocator())
 		{
 			size_ = n;
 			capacity_ = n;
@@ -41,7 +41,7 @@
 				alloc_.construct(buffer_[i], value);
 		}
 			template <class InputIterator>
-		vector(InputIterator first, InputIterator last,const Allocator& alloc = Allocator())
+		Vector(InputIterator first, InputIterator last,const Allocator& alloc = Allocator())
 		{
 			size_t n = last - first;
 			alloc_ = alloc;
@@ -50,16 +50,18 @@
 			buffer_ = alloc_.allocate(n);
 			for(size_t i = 0; first != last; i++,first++)
 				buffer_[i] = *first;
-		}
-		vector(const vector<T,Allocator>& x)
+			}
+
+		Vector(const Vector<T,Allocator>& x)
 		{
 			size_ = x.size_;
 			capacity_ = x.capacity_;
 			buffer_ = alloc_.allocate(capacity_);
 			for (size_t i = 0 ; i < size_ ; i++)
 				alloc_.construct(&buffer_[i], x.buffer_[i]);
+
 		}
-		~vector()
+		~Vector()
 		{
 			alloc_.deallocate(buffer_, capacity_);
 			for (size_t i = 0; i < size_; i++)
@@ -67,7 +69,7 @@
 		}
 
 		//Operators
-		vector<T,Allocator>& operator=(const vector<T,Allocator>& x)
+		Vector<T,Allocator>& operator=(const Vector<T,Allocator>& x)
 		{
 			size_ = x.size_;
 			capacity_ = x.capacity_;
@@ -215,13 +217,13 @@
 		const_reference at(size_type n) const
 		{
 			if(n > size_)
-				throw std::out_of_range("vector out of range");
+				throw std::out_of_range("Vector out of range");
 			return buffer_[n];
 		}
 		reference at(size_type n)
 		{
 			if(n > size_)
-				throw std::out_of_range("vector out of range");
+				throw std::out_of_range("Vector out of range");
 			return buffer_[n];
 		}
 		reference front()
@@ -255,7 +257,7 @@
 			alloc_.destroy(&buffer_[size_]);
 			size_--;
 		}
-		void swap (vector& x)
+		void swap (Vector& x)
 		{
 			size_t			tmpSize = size_;
 			size_t			tmpCapacity = capacity_;
@@ -379,14 +381,14 @@
 	};
 
 		template <class T, class Allocator>
-	bool operator==(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	bool operator==(const Vector<T,Allocator>& x, const Vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
 			return false;
 		return (ft::equal(x.begin(), x.end(), y.begin()));
 	}
 		template <class T, class Allocator>
-	bool operator!=(const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	bool operator!=(const Vector<T,Allocator>& x, const Vector<T,Allocator>& y)
 	{
 		if (x.size() != y.size())
 			return true;
@@ -398,24 +400,24 @@
 		return false;
 	}
 		template <class T, class Allocator>
-	bool operator< (const vector<T,Allocator>& x, const vector<T,Allocator>& y)
+	bool operator< (const Vector<T,Allocator>& x, const Vector<T,Allocator>& y)
 	{
 		return (ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
 	}
 		template <class T, class Allocator>
-	bool operator> (const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	bool operator> (const Vector<T,Allocator>& x,const Vector<T,Allocator>& y)
 	{
 		return (ft::lexicographical_compare(y.begin(), y.end(), x.begin(), x.end()));
 	}
 		template <class T, class Allocator>
-	bool operator>=(const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	bool operator>=(const Vector<T,Allocator>& x,const Vector<T,Allocator>& y)
 	{
 		if (x > y || x == y)
 			return (true);
 		return (false);
 	}
 		template <class T, class Allocator>
-	bool operator<=(const vector<T,Allocator>& x,const vector<T,Allocator>& y)
+	bool operator<=(const Vector<T,Allocator>& x,const Vector<T,Allocator>& y)
 	{
 		if (x < y || x == y)
 			return (true);
@@ -423,7 +425,7 @@
 	}
 
 		template <class T, class Alloc>
-	void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+	void swap (Vector<T,Alloc>& x, Vector<T,Alloc>& y)
 	{
 		x.swap(y);
 	}

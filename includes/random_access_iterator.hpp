@@ -11,8 +11,8 @@ namespace ft
 	{
 		public :
 			typedef T																						value_type;
-			typedef T*																						pointer;
-			typedef T&																						reference;
+			typedef typename std::iterator<std::random_access_iterator_tag, T>::pointer						pointer;
+			typedef typename std::iterator<std::random_access_iterator_tag, T>::reference					reference;
 			typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type		difference_type;
 			typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category		iterator_category;
 
@@ -39,7 +39,7 @@ namespace ft
 			}
 			random_access_iterator& operator++(int)
 			{
-				random_access_iterator tmp(itr_ptr);
+				random_access_iterator tmp = *this;
 				itr_ptr++;
 				return tmp;
 			}
@@ -50,7 +50,7 @@ namespace ft
 			}
 			random_access_iterator& operator--(int)
 			{
-				random_access_iterator tmp(itr_ptr);
+				random_access_iterator tmp = *this;
 				operator--();
 				return tmp;
 			}
@@ -82,7 +82,7 @@ namespace ft
 			}
 			pointer operator->() const
 			{
-				return itr_ptr;
+				return &*itr_ptr;
 			}
 			operator random_access_iterator<const value_type>() const
 			{
@@ -93,42 +93,42 @@ namespace ft
 			pointer itr_ptr; 
 	};
 	template <class T>
-	bool operator== (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator==(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() == rhs.get_pointer());
 	}
 	template <class T>
-	bool operator!= (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator!=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() != rhs.get_pointer());
 	}
 	template <class T>
-	bool operator<  (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator<(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() < rhs.get_pointer());
 	}
 	template <class T>
-	bool operator<=  (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator<=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() <= rhs.get_pointer());
 	}
 	template <class T>
-	bool operator>  (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator>(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() > rhs.get_pointer());
 	}
 	template <class T>
-	bool operator>=  (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	bool operator>=(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() >= rhs.get_pointer());
 	}
 	template <class T>
-	random_access_iterator<T> operator+ (typename random_access_iterator<T>::difference_type n, const random_access_iterator<T>& rand)
+	random_access_iterator<T> operator+(typename random_access_iterator<T>::difference_type n, const random_access_iterator<T>& rand)
 	{
 		return (rand + n);
 	}
 	template <class T>
-	typename random_access_iterator<T>::difference_type operator- (const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
+	typename random_access_iterator<T>::difference_type operator-(const random_access_iterator<T>& lhs, const random_access_iterator<T>& rhs)
 	{
 		return (lhs.get_pointer() - rhs.get_pointer());
 	}

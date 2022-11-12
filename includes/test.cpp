@@ -2,7 +2,7 @@
 
  int main()
  {
-	 ft::vector<int>  amine(10,15);
+	 ft::vector<std::string>  amine(10,"jjj");
 
 	//  ft::vector<int> copy_amine;
 	//  copy_amine(amine.begin(),  amine.end());

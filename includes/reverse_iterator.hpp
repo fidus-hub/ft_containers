@@ -64,11 +64,15 @@ namespace ft
 			}
 			reverse_iterator operator+(difference_type n) const
 			{
-				return reverse_iterator((itr_ptr - n));
+				reverse_iterator	tmp(this->base());
+				tmp.itr_ptr -= n;
+				return (tmp);
 			}
 			reverse_iterator operator-(difference_type n) const
 			{
-				return reverse_iterator((itr_ptr + n));
+				reverse_iterator	tmp(this->base());
+				tmp.itr_ptr += n;
+				return (tmp);
 			}
 			reverse_iterator operator+=(difference_type n)
 			{

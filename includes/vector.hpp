@@ -24,24 +24,24 @@
 		
 
 		//Constructors
-		explicit Vector(const Allocator& alloc = Allocator())
+		explicit Vector(const allocator_type& alloc = allocator_type())
 		{
 			size_ = 0;
 			capacity_ = 0;
 			alloc_ = alloc;
 			buffer_ = NULL;
 		}
-		explicit Vector(size_type n, const T& value = T(), const Allocator& alloc = Allocator())
+		explicit Vector(size_type n, const T& value = T(), const allocator_type& alloc = allocator_type())
 		{
 			size_ = n;
 			capacity_ = n;
 			alloc_ = alloc;
 			buffer_ = alloc_.allocate(n);
 			for(size_t i = 0; i < n; i++)
-				alloc_.construct(buffer_[i], value);
+				alloc_.construct(&buffer_[i], value);
 		}
 			template <class InputIterator>
-		Vector(InputIterator first, InputIterator last,const Allocator& alloc = Allocator())
+		Vector(InputIterator first, InputIterator last,const Allocator& alloc = allocator_type())
 		{
 			size_t n = last - first;
 			alloc_ = alloc;
@@ -154,43 +154,43 @@
 		{
 			return (size_ == 0);
 		}
-		void resize (size_type n, value_type val = value_type())
-		{
-			if(n < size_)
-			{
-				size_t i = size_;
-				while(i > n)
-				{
-					alloc_.destroy(&buffer_[i]);
-					i--;
-				}
-			}
-			if(n > size_)
-			{
-				reserve(n);
-				size_t i = size_;
-				while(i < n)
-				{
-					alloc_.contruct(&buffer_[i],val);
-					i++;
-				}
-			}
-			size_ = n;
-		}
 		// void resize (size_type n, value_type val = value_type())
 		// {
-		// 	while(n < size_)
-		// 		pop_back();
-		// 	while (n > size_)
-		// 		push_back(val);
+		// 	if(n < size_)
+		// 	{
+		// 		size_t i = size_;
+		// 		while(i > n)
+		// 		{
+		// 			alloc_.destroy(&buffer_[i]);
+		// 			i--;
+		// 		}
+		// 	}
+		// 	if(n > size_)
+		// 	{
+		// 		reserve(n);
+		// 		size_t i = size_;
+		// 		while(i < n)
+		// 		{
+		// 			alloc_.construct(&buffer_[i],val);
+		// 			i++;
+		// 		}
+		// 	}
+		// 	size_ = n;
 		// }
+		void resize (size_type n, value_type val = value_type())
+		{
+			while(n < size_)
+				pop_back();
+			while (n > size_)
+				push_back(val);
+		}
 
 		void reserve(size_type n)
 		{
 			if (n > capacity_)
 			{
 				pointer tmp = alloc_.allocate(n);
-				int i = 0;
+				size_t i = 0;
 				while (i < size_)
 				{
 					alloc_.construct(&tmp[i],buffer_[i]);
@@ -249,7 +249,7 @@
 		{
 			if(size_ == capacity_)
 				reserve(capacity_ == 0 ? 1 : capacity_ * 2);
-			buffer_[size_ + 1] = val;
+			buffer_[size_] = val;
 			++size_;
 		}
 		void pop_back()
@@ -273,7 +273,7 @@
 		}
 		void	clear()
 		{
-			int i = 0;
+			size_t i = 0;
 			while(i < size_)
 			{
 				alloc_.destroy(&buffer_[i]);
@@ -310,7 +310,6 @@
 			}
 			for(size_t j = (len + n); j > len; j--)
 				buffer_[j] = val;
-			return &buffer_[len];
 		}
 			template <class InputIterator>
 		void insert(iterator position, InputIterator first, InputIterator last)
@@ -347,7 +346,7 @@
 				i++;
 			}
 			alloc_.destroy(&buffer_[size_ - 1]);
-			size_ - 1;
+			size_--;
 			return (position);
 		}
 		iterator erase(iterator first, iterator last)

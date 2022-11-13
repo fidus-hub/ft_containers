@@ -10,11 +10,11 @@ namespace ft
 	class random_access_iterator
 	{
 		public :
-			typedef T																						value_type;
-			typedef typename std::iterator<std::random_access_iterator_tag, T>::pointer						pointer;
-			typedef typename std::iterator<std::random_access_iterator_tag, T>::reference					reference;
+			typedef T																				value_type;
+			typedef typename std::iterator<std::random_access_iterator_tag, T>::pointer				pointer;
+			typedef typename std::iterator<std::random_access_iterator_tag, T>::reference			reference;
 			typedef typename std::iterator<std::random_access_iterator_tag, T>::difference_type		difference_type;
-			typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category		iterator_category;
+			typedef typename std::iterator<std::random_access_iterator_tag, T>::iterator_category	iterator_category;
 
 			random_access_iterator() :itr_ptr(nullptr) {}
 			random_access_iterator(pointer ptr) : itr_ptr(ptr) {}

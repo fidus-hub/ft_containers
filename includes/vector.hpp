@@ -1,7 +1,6 @@
  #include <iostream>
  #include "random_access_iterator.hpp"
  #include "reverse_iterator.hpp"
- #include "utils.hpp"
  
 
  namespace ft 
@@ -41,7 +40,7 @@
 				alloc_.construct(&buffer_[i], value);
 		}
 			template <class InputIterator>
-		Vector(InputIterator first, InputIterator last,const Allocator& alloc = allocator_type())
+		 Vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value,InputIterator >::type = InputIterator()) 
 		{
 			size_t n = last - first;
 			alloc_ = alloc;
@@ -84,7 +83,7 @@
 		}
 
 		template <class InputIterator>
-		void assign(InputIterator first, InputIterator last)
+		void assign (InputIterator first, InputIterator last,  typename enable_if<!ft::is_integral<InputIterator>::value,InputIterator >::type = InputIterator())
 		{
 			erase(begin(),end());
 			insert(begin(),first,last);
@@ -312,7 +311,7 @@
 				buffer_[j] = val;
 		}
 			template <class InputIterator>
-		void insert(iterator position, InputIterator first, InputIterator last)
+		void    insert(iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value,InputIterator >::type = InputIterator())
 		{
 			size_t n = last - first;
 			size_t len = std::distance(begin(), position);

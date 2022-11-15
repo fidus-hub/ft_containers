@@ -17,14 +17,16 @@ namespace ft
 			typedef typename ft::iterator_traits<T>::iterator_category	iterator_category;
 
 			reverse_iterator() : itr_ptr() {}
-			explicit reverse_iterator(iterator_type it) : itr_ptr(it) {}
+			explicit reverse_iterator(iterator_type it) : itr_ptr(--it) {}
 
 			template <class Iter>
-			reverse_iterator(const reverse_iterator<Iter>& rev_itr) : itr_ptr(rev_itr.base()) {}
+			reverse_iterator(const reverse_iterator<Iter>& rev_itr) : itr_ptr(--(rev_itr.base())) {}
 
 			iterator_type base() const
 			{
-				return itr_ptr;
+				iterator_type tmp = itr_ptr;
+				return (++tmp);
+				//return itr_ptr;
 			}
 			reference operator*() const
 			{
@@ -36,7 +38,7 @@ namespace ft
 			}
 			reference operator[](difference_type n) const
 			{
-				return (itr_ptr[-n]);
+				return (itr_ptr[n]);
 			}
 
 
@@ -48,7 +50,7 @@ namespace ft
 			reverse_iterator operator++(int)
 			{
 				reverse_iterator tmp = *this;
-				--(*this);
+				--(itr_ptr);
 				return tmp;
 			}
 			reverse_iterator& operator--()
@@ -59,7 +61,7 @@ namespace ft
 			reverse_iterator operator--(int)
 			{
 				reverse_iterator tmp = *this;
-				++(*this);
+				++(itr_ptr);
 				return tmp;
 			}
 			reverse_iterator operator+(difference_type n) const

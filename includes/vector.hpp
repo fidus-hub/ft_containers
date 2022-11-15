@@ -153,36 +153,37 @@
 		{
 			return (size_ == 0);
 		}
-		// void resize (size_type n, value_type val = value_type())
-		// {
-		// 	if(n < size_)
-		// 	{
-		// 		size_t i = size_;
-		// 		while(i > n)
-		// 		{
-		// 			alloc_.destroy(&buffer_[i]);
-		// 			i--;
-		// 		}
-		// 	}
-		// 	if(n > size_)
-		// 	{
-		// 		reserve(n);
-		// 		size_t i = size_;
-		// 		while(i < n)
-		// 		{
-		// 			alloc_.construct(&buffer_[i],val);
-		// 			i++;
-		// 		}
-		// 	}
-		// 	size_ = n;
-		// }
 		void resize (size_type n, value_type val = value_type())
 		{
-			while(n < size_)
-				pop_back();
-			while (n > size_)
-				push_back(val);
+			if(n < size_)
+			{
+				size_t i = size_;
+				while(i > n)
+				{
+					alloc_.destroy(&buffer_[i]);
+					i--;
+				}
+			}
+			if(n > size_)
+			{
+				if (n > capacity_)
+					reserve(n);
+				size_t i = size_;
+				while(i < n)
+				{
+					alloc_.construct(&buffer_[i],val);
+					i++;
+				}
+			}
+			size_ = n;
 		}
+		// void resize (size_type n, value_type val = value_type())
+		// {
+		// 	while(n < size_)
+		// 		pop_back();
+		// 	while (n > size_)
+		// 		push_back(val);
+		// }
 
 		void reserve(size_type n)
 		{

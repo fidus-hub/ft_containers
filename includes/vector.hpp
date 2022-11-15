@@ -284,9 +284,14 @@
 		iterator insert(iterator position, const T& val)
 		{
 			size_t len = std::distance(begin(),position);
-			size_ += 1;
 			if (size_ >= capacity_)
-				reserve (capacity_ * 2);
+			{
+				if (capacity_ == 0)
+					reserve(1);
+				else
+					reserve (capacity_ * 2);
+			}
+			size_ += 1;
 			size_t i = size_;
 			while(i > len)
 			{
@@ -299,45 +304,43 @@
 		void insert(iterator position, size_type n, const T& val)
 		{
 			size_t len = std::distance(begin(),position);
-			size_ += n;
-			if (size_ >= capacity_)
-				reserve (capacity_ * 2);
+			if (size_ + n >= capacity_)
+			{
+				if (size_ + n > capacity_)
+					reserve(size_ + n);
+				else
+					reserve (capacity_ * 2);
+			}
 			size_t i = size_;
 			while(i > len)
 			{
-				buffer_[i] = buffer_[i - n];
+				alloc_.construct(&buffer_[i + n - 1], buffer_[i - 1]);
 				i--;
 			}
 			for(size_t j = (len + n); j > len; j--)
-				buffer_[j] = val;
+				alloc_.construct(&buffer_[i],val);
+			size_ += n;
 		}
 			template <class InputIterator>
 		void    insert(iterator position, InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value,InputIterator >::type = InputIterator())
 		{
 			size_t n = last - first;
 			size_t len = std::distance(begin(), position);
-			size_ += n;
-			if (size_ >= capacity_)
-				reserve (capacity_ * 2);
+			if (size_ + n > capacity_)
+			{
+				if (n > size_)
+					reserve(n + size_);
+				else
+					reserve(capacity_ * 2);
+			}
 			for(size_t i = size_; i > len; i--)
-				buffer_[i] = buffer_[i - n];
+				buffer_[i + n - 1] = buffer_[i - 1];
 			for(size_t i = len; i < len + n && first != last; i++,first++)
-				buffer_[i] = *first;
-				//alloc_.construct(&buffer_[i],*first);
+				alloc_.construct(&buffer_[i],*first);
+			size_ += n;
 		}
 		iterator erase(iterator position)
 		{
-			//size_t len = std::distance(begin(),position);
-			//_alloc.destroy(&buffer_[len]);
-			//size_t i = len;
-			//while(i < size_ - 1)
-			//{
-			//	buffer_[i] = buffer_[i + 1];
-			//	i++;
-			//}
-			//--_size;
-			//return position;
-
 			size_t len = std::distance(begin(),position);
 			size_t i = len;
 			while(i < size_ - 1)
@@ -357,18 +360,6 @@
 				erase(first);
 			}
 			return (first);
-
-			// size_t dis = 0;
-			// size_t len = 0;
-
-			// des = std::distance(first,last);
-			// len = std::distance(begin(),first);
-			// for(int i = len; i < len + des; i++)
-			// 	_alloc.destroy(&buffer_[i]);
-			// for(int i = len; i < size_ - des; i++)
-			// 	buffer_[i] = buffer_[i + des];
-			// size_ -= des;
-			// return iterator(&buffer_[len]);
 		}
 
 		private:

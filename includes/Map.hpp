@@ -10,21 +10,21 @@ namespace ft
     {
         public:
         // types:
-        typedef Key key_type;
-        typedef T mapped_type;
-        typedef pair<const Key, T> value_type;
-        typedef Compare key_compare;
-        typedef Allocator allocator_type;
-        typedef typename Allocator::reference reference;
-        typedef typename Allocator::const_reference const_reference;
-        typedef implementation defined iterator; // See 23.1
-        typedef implementation defined const_iterator; // See 23.1
-        typedef implementation defined size_type; // See 23.1
-        typedef implementation defined difference_type;// See 23.1
-        typedef typename Allocator::pointer pointer;
-        typedef typename Allocator::const_pointer const_pointer;
-        typedef std::reverse_iterator<iterator> reverse_iterator;
-        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+        typedef Key                                         key_type;
+        typedef T                                           mapped_type;
+        typedef pair<const Key, T>                          value_type;
+        typedef Compare                                     key_compare;
+        typedef Allocator                                   allocator_type;
+        typedef typename Allocator::reference               reference;
+        typedef typename Allocator::const_reference         const_reference;
+        typedef implementation defined                      iterator; // See 23.1
+        typedef implementation defined                      const_iterator; // See 23.1
+        typedef implementation defined                      size_type; // See 23.1
+        typedef implementation defined                      difference_type;// See 23.1
+        typedef typename Allocator::pointer                 pointer;
+        typedef typename Allocator::const_pointer           const_pointer;
+        typedef std::reverse_iterator<iterator>             reverse_iterator;
+        typedef std::reverse_iterator<const_iterator>       const_reverse_iterator;
 
         class value_compare
         : public binary_function<value_type,value_type,bool> {
@@ -37,6 +37,7 @@ namespace ft
         return comp(x.first, y.first);
         }
         };
+        
         // 23.3.1.1 construct/copy/destroy:
         explicit map(const Compare& comp = Compare(),
         const Allocator& = Allocator());
@@ -47,6 +48,7 @@ namespace ft
         ~map();
         map<Key,T,Compare,Allocator>&
         operator=(const map<Key,T,Compare,Allocator>& x);
+
         // iterators:
         iterator begin();
         const_iterator begin() const;
@@ -56,12 +58,15 @@ namespace ft
         const_reverse_iterator rbegin() const;
         reverse_iterator rend();
         const_reverse_iterator rend() const;
+
         // capacity:
         bool empty() const;
         size_type size() const;
         size_type max_size() const;
+
         // 23.3.1.2 element access:
         T& operator[](const key_type& x);
+
         // modifiers:
         pair<iterator, bool> insert(const value_type& x);
         iterator insert(iterator position, const value_type& x);
@@ -72,6 +77,7 @@ namespace ft
         void erase(iterator first, iterator last);
         void swap(map<Key,T,Compare,Allocator>&);
         void clear();
+
         // observers:
         key_compare key_comp() const;
         value_compare value_comp() const;

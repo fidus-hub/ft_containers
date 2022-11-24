@@ -38,19 +38,18 @@ namespace ft
 				ct.pop_back();
 			};
 
-		template< class I, class Container2 >
-		friend bool operator==( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
 			template< class I, class Container2 >
-		friend bool operator!=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
-			template< class I, class Container2 >
-		friend bool operator<( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
-			template< class I, class Container2 >
-		friend bool operator<=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
-			template< class I, class Container2 >
-		friend bool operator>( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
-			template< class I, class Container2 >
-		friend bool operator>=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
-
+			friend bool operator==( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
+				template< class I, class Container2 >
+			friend bool operator!=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
+				template< class I, class Container2 >
+			friend bool operator<( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
+				template< class I, class Container2 >
+			friend bool operator<=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
+				template< class I, class Container2 >
+			friend bool operator>( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
+				template< class I, class Container2 >
+			friend bool operator>=( const Stack<I,Container2>& lhs, const Stack<I,Container2>& rhs );
 
 		protected:
 			container_type ct;

@@ -1,313 +1,389 @@
-#pragma once
-
 #include <iostream>
-#include <queue>
-#include <unordered_map>
-#include "Map.hpp"
+#include "utils.hpp"
 
-namespace ft
+namespace ft 
 {
 
-	struct node
-	{
-		struct node *left;
-		int data;
-		int height;
-		struct node *right;
 
-	};
+template <class Key, class T , class compare = std::less<Key>, class Alloc = std::allocator<Key> >
+class AVL
+{
+	typedef my_node<Key, T>										node_type;
+	typedef ft::pair<Key, T>									pair;
+	typedef typename Alloc::template rebind<node_type>::other	rebind_allocator;
+	typedef typename Alloc::template rebind<pair>::other		_allocator;
+	rebind_allocator											Node_All;
+	_allocator 													Pair_All;
+	compare														_comp;
 
-	class AVL
-	{
-	private:
 
 	public:
-		struct node * root;
-		AVL()
+	AVL(rebind_allocator rebind = rebind_allocator(), _allocator alloc = _allocator(), compare _c = compare()) 
+	{
+		Node_All = rebind;
+		Pair_All = alloc;
+		_comp = _c;
+	}
+	~AVL() {
+	}
+
+	node_type* Insert(node_type* root, node_type* parent, pair _pair)
+	{
+		if (root == NULL) 
 		{
-			this->root = NULL;	
-		}	
-		int calheight(struct node *p)
-		{	
-				if(p->left && p->right)
-				{
-				if (p->left->height < p->right->height)
-					return p->right->height + 1;
-				else return  p->left->height + 1;
-				}
-				else if(p->left && p->right == NULL)
-				{
-					return p->left->height + 1;
-				}
-				else if(p->left ==NULL && p->right)
-				{
-					return p->right->height + 1;
-				}
-				return 0;	
+			root = Node_All.allocate(1);
+			root->pair = Pair_All.allocate(1);
+			Pair_All.construct(root->pair, _pair);
+			root->height = 1;
+			root->left = NULL;
+			root->right = NULL;
+			root->par = parent;
+			return root;
 		}
+		if (_comp(_pair.first, root->pair->first)) 
+			root->left = Insert(root->left,root, _pair);
+		else if (_comp(root->pair->first, _pair.first))
+			root->right = Insert(root->right,root, _pair);
+		root = Balance(root);
+		UpdateHeight(root);
 
-		int bf(struct node *n)
-		{
-				if(n->left && n->right)
-				{
-					return n->left->height - n->right->height; 
-				}
-				else if(n->left && n->right == NULL)
-				{
-					return n->left->height; 
-				}
-				else if(n->left== NULL && n->right )
-				{
-					return -n->right->height;
-				}
-		}
+		return root;
+	}
 
-		struct node * llrotation(struct node *n)
-		{
-			struct node *p;
-			struct node *tp;
-			p = n;
-			tp = p->left;
-			p->left = tp->right;
-			tp->right = p;
-			return tp; 
-		}
-
-
-		struct node * rrrotation(struct node *n)
-		{
-			struct node *p;
-			struct node *tp;
-			p = n;
-			tp = p->right;
-			p->right = tp->left;
-			tp->left = p;
-			return tp; 
-		}
-
-
-		struct node * rlrotation(struct node *n)
-		{
-			struct node *p;
-			struct node *tp;
-			struct node *tp2;
-
-			p = n;
-			tp = p->right;
-			tp2 =p->right->left;
-			p -> right = tp2->left;
-			tp ->left = tp2->right;
-			tp2 ->left = p;
-			tp2->right = tp; 
-
-			return tp2; 
-		}
-
-		struct node * lrrotation(struct node *n)
-		{
-			struct node *p;
-			struct node *tp;
-			struct node *tp2;
-			p = n;
-			tp = p->left;
-			tp2 =p->left->right;
-			p -> left = tp2->right;
-			tp ->right = tp2->left;
-			tp2 ->right = p;
-			tp2->left = tp; 
-
-			return tp2; 
-		}
-
-		struct node* insert(struct node *r,int data)
-		{
-		
-			if(r==NULL)
+	node_type* Delete(node_type* root,pair _pair)
+	{
+		if (root == NULL)
+			return NULL;
+		else
+		{	if (root->pair->first != _pair.first)
 			{
-				struct node *n;
-				n = new struct node;
-				n->data = data;
-				r = n;
-				r->left = r->right = NULL;
-				r->height = 1; 
+				if (_comp(root->pair->first, _pair.first))
+					root->right = Delete(root->right, _pair);
+				else if (!_comp(root->pair->first, _pair.first)) 
+					root->left = Delete(root->left, _pair);
+			}
+			if (root->pair->first == _pair.first)
+			{
+				if (root->right == NULL && root->left != NULL)
+				{
+					if (root->par != NULL) 
+					{
+						if (_comp(root->par->pair->first , root->pair->first))
+							root->par->right = root->left;
+						else
+							root->par->left = root->left;
+						UpdateHeight(root->par);
+					}
+					root->left->par = root->par;
+					root->left = Balance(root->left);
+					return root->left;
+				}
+				else if (root->left == NULL && root->right != NULL) 
+				{
+					if (root->par != NULL) 
+					{
+						if (_comp(root->par->pair->first , root->pair->first))
+							root->par->right = root->right;
+						else
+							root->par->left = root->right;
+						UpdateHeight(root->par);
+					}
+					root->right->par = root->par;
+					root->right = Balance(root->right);
+					return root->right;
+				}
+
+				else if (root->left == NULL && root->right == NULL) 
+				{
+					if ( root->par && _comp(root->par->pair->first, root->pair->first)) {
+						root->par->right = NULL;
+					}
+					else if (root->par)
+					{
+						root->par->left = NULL;
+					}
+					if (root->par != NULL)
+						UpdateHeight(root->par);
+					root = NULL;
+					return NULL;
+				}
+
+				else 
+				{
+					node_type* tmpnode = root;
+					tmpnode = tmpnode->right;
+					while (tmpnode->left != NULL) 
+						tmpnode = tmpnode->left;
+
+					pair *val =  tmpnode->pair;
+
+					root->right = Delete(root->right, *tmpnode->pair);
+
+					root->pair = val;
+
+					root = Balance(root);
+				}
+			}
+			if (root != NULL)
+				UpdateHeight(root);
+		}
+		return root;
+	}
+
+/* ---------------------- ROTATIONS --------------------- */
+	node_type* left_left(node_type* root)
+	{
+
+		node_type* tmpnode = root->left;
+
+		root->left = tmpnode->right;
+
+		if (tmpnode->right != NULL)
+			tmpnode->right->par = root;
+
+
+		tmpnode->right = root;
+
+		tmpnode->par = root->par;
+
+		root->par = tmpnode;
+
+
+		if (tmpnode->par != NULL && _comp(root->pair->first, tmpnode->par->pair->first))
+			tmpnode->par->left = tmpnode;
+		else {
+			if (tmpnode->par != NULL)
+				tmpnode->par->right = tmpnode;
+		}
+
+		root = tmpnode;
+
+		UpdateHeight(root->left);
+		UpdateHeight(root->right);
+		UpdateHeight(root);
+		UpdateHeight(root->par);
+
+		return root;
+	}
+
+	node_type* right_right (node_type* root)
+	{
+
+		node_type* tmpnode = root->right;
+
+		root->right = tmpnode->left;
+
+		if (tmpnode->left != NULL)
+			tmpnode->left->par = root;
+
+
+		tmpnode->left = root;
+
+
+		tmpnode->par = root->par;
+
+
+		root->par = tmpnode;
+
+
+		if (tmpnode->par != NULL && _comp(root->pair->first, tmpnode->par->pair->first)) 
+			tmpnode->par->left = tmpnode;
+		else {
+			if (tmpnode->par != NULL)
+				tmpnode->par->right = tmpnode;
+		}
+
+		root = tmpnode;
+
+		UpdateHeight(root->left);
+		UpdateHeight(root->right);
+		UpdateHeight(root);
+		UpdateHeight(root->par);
+
+		return root;
+	}
+
+	node_type* left_right(node_type* root)
+	{
+		root->left = right_right(root->left);
+		return left_left(root);
+	}
+
+	node_type* right_left(node_type* root)
+	{
+		root->right = left_left(root->right);
+		return right_right(root);
+	}
+
+
+	node_type *find(node_type *my_node, Key key)const
+	{
+		if (my_node == nullptr)
+			return nullptr;
+		if (!_comp(my_node->pair->first, key) && !_comp(key, my_node->pair->first))
+			return my_node;
+		else if (_comp(my_node->pair->first , key))
+			return (find(my_node->right, key));
+		else if (_comp(key, my_node->pair->first))
+			return(find(my_node->left, key));
+		return my_node; 
+	}
+
+
+	void UpdateHeight(node_type* root)
+	{
+		if (root != NULL) 
+		{
+			int val = 1;
+			if (root->left != NULL)
+				val = root->left->height + 1;
+
+			if (root->right != NULL)
+				val = max(val, root->right->height + 1);
+			root->height = val;
+		}
+	}
+
+	node_type* Balance(node_type* root)
+	{
+
+		int LeftHeight = 0;
+		int RightHeight = 0;
+
+		if (root->left != NULL)
+			LeftHeight = root->left->height;
+
+		if (root->right != NULL)
+			RightHeight = root->right->height;
+
+		if ((LeftHeight - RightHeight) == -2) 
+		{
+			int rightheight1 = 0;
+			int rightheight2 = 0;
+			if (root->right->right != NULL)
+				rightheight2 = root->right->right->height;
+			if (root->right->left != NULL)
+				rightheight1 = root->right->left->height;
+			if (rightheight1 > rightheight2) {
+				root = right_left(root);
+			}
+			else 
+				root = right_right(root);
+		}
+		else if ((LeftHeight - RightHeight) == 2)
+		{
+
+			int leftheight1 = 0;
+			int leftheight2 = 0;
+			if (root->left->right != NULL)
+				leftheight2 = root->left->right->height;
+			if (root->left->left != NULL)
+				leftheight1 = root->left->left->height;
+			if (leftheight1 > leftheight2) 
+				root = left_left(root);
+			else
+				root = left_right(root);
+		}
+		return root;
+	}
+
+
+	node_type *lowerBound(node_type *root, const Key &k) const
+			{
+				node_type *r = NULL;
+				while(root != nullptr)
+				{
+					if (!_comp(root->pair->first, k))
+					{
+						r = root;
+						root = root->left;
+					}
+					else
+						root = root->right;
+				}
 				return r;
 			}
-			else
+			node_type *upperbound(node_type *root, const Key &k)const
 			{
-				if(data < r->data)
-				r->left = insert(r->left,data);
-				else
-				r->right = insert(r->right,data);
-			}
-
-			r->height = calheight(r);
-
-			if(bf(r)==2 && bf(r->left)==1)
-			{
-				r = llrotation(r);
-			}
-			else if(bf(r)==-2 && bf(r->right)==-1)
-			{
-				r = rrrotation(r);
-			}
-			else if(bf(r)==-2 && bf(r->right)==1)
-			{
-				r = rlrotation(r);
-			}
-			else if(bf(r)==2 && bf(r->left)==-1)
-			{
-				r = lrrotation(r);
-			}
-
-			return r;
-
-			}
-
-		void levelorder_newline()
-		{
-			if (this->root == NULL)
-			{
-				std::cout<<"\n"<<"Empty tree"<<"\n";
-				return;
-			}
-			levelorder_newline(this->root);
-		}
-
-		void levelorder_newline(struct node *v)
-		{
-			std::queue <struct node *> q;
-			struct node *cur;
-			q.push(v);
-			q.push(NULL);
-			while(!q.empty())
-			{
-				cur = q.front();
-				q.pop();
-				if(cur == NULL && q.size()!=0)
+				node_type *r = NULL;
+				while(root != nullptr)
 				{
-					std::cout<<"\n";	
-					q.push(NULL);
-					continue;
-				}
-				if(cur!=NULL)
-				{
-					std::cout<<" "<<cur->data;	
-					if (cur->left!=NULL)
+					if (_comp(k,root->pair->first))
 					{
-					q.push(cur->left);
+						r = root;
+						root = root->left;
 					}
-					if (cur->right!=NULL)
-					{
-						q.push(cur->right);
-					}
+					else
+						root = root->right;
 				}
-
-
+				return r;
 			}
+	node_type *findmin(node_type *root)
+	{
+		if (root == NULL)
+			return NULL;
+		if (root->left != NULL)
+			root = root->left;
+		return root;
+	}
+	node_type *findmax(node_type *root)
+	{
+		if (root == NULL)
+			return NULL;
+		if (root->right != NULL)
+			root = root->right;
+		return root;
+	}
+
+
+	void printpreorder(node_type* root)
+	{
+		// Print the my_node's value along
+		// with its parent value
+
+
+		if (root->par != NULL)
+			std::cout << root->par->pair->first << std::endl;
+		else
+			std::cout << "NULL" << std::endl;
+
+		// Recur to the left subtree
+		if (root->left != NULL) {
+			printpreorder(root->left);
 		}
-	
-		struct node * deleteNode(struct node *p,int data)
+
+		// Recur to the right subtree
+		if (root->right != NULL) {
+			printpreorder(root->right);
+		}
+	}
+	node_type *treeSuccessor(node_type *x)const
 		{
-
-			if(p->left == NULL && p->right == NULL)
+			if (x == NULL)
+				return x;
+			if (x->right != NULL)
+				return treemin(x->right);
+			node_type *y = x->par;
+			while(y!= NULL && (x == y->right ))
 			{
-					if(p==this->root)
-						this->root = NULL;
-				delete p;
-				return NULL;
+				x = y;
+				y = y->par;
 			}
-
-			struct node *t;
-			struct node *q;
-			if(p->data < data)
+				return y;
+		}
+			node_type *treepredecessor(node_type *x)const
 			{
-				p->right = deleteNode(p->right,data);
-			}
-			else if(p->data > data)
-			{
-				p->left = deleteNode(p->left,data);
-			}
-			else
-			{
-				if(p->left != NULL)
+				if (x == NULL)
+					return x;
+				if (x->left != NULL)
+					return findmax(x->left);
+				node_type *y = x->par;
+				while(y!= NULL && (x == y->left))
 				{
-					q = inpre(p->left);
-					p->data = q->data;
-					p->left=deleteNode(p->left,q->data);
+					x =y;
+					y = y->par;
 				}
-				else
-				{
-					q = insuc(p->right);
-					p->data = q->data;
-					p->right = deleteNode(p->right,q->data);
-				}
+				return y;
 			}
-
-			if(bf(p)==2 && bf(p->left)==1){ p = llrotation(p); }
-			else if(bf(p)==2 && bf(p->left)==-1){ p = lrrotation(p); }
-			else if(bf(p)==2 && bf(p->left)==0){ p = llrotation(p); }
-			else if(bf(p)==-2 && bf(p->right)==-1){ p = rrrotation(p); }
-			else if(bf(p)==-2 && bf(p->right)==1){ p = rlrotation(p); }
-			else if(bf(p)==-2 && bf(p->right)==0){ p = llrotation(p); }
-
-
-			return p;
-		}
-
-		struct node* inpre(struct node* p)
-		{
-			while(p->right!=NULL)
-				p = p->right;
-			return p;
-		}
-
-		struct node* insuc(struct node* p)
-		{
-			while(p->left!=NULL)
-				p = p->left;
-
-			return p;
-		}
-
-		~AVL(){
-
-		}
-	};
+};
 }
-
-// int main(){
-//     AVL b;
-//     int c,x;
-//     do{
-//         std::cout<<"\n1.Display levelorder on newline";
-//         std::cout<<"\n2.Insert";
-//         std::cout<<"\n3.Delete\n";
-//         std::cout<<"\n0.Exit\n";
-//         std::cout<<"\nChoice: ";
-//         std::cin>>c;
-//         switch (c)
-//         {
-//         case 1:
-//             b.levelorder_newline();
-//             // to print the tree in level order
-//             break;
-                  
-//         case 2:
-//             std::cout<<"\nEnter no. ";
-//             std::cin>>x;
-//             b.root = b.insert(b.root,x);
-//             break;
-        
-//         case 3:
-//             std::cout<<"\nWhat to delete? ";
-//             std::cin>>x;
-//             b.root = b.deleteNode(b.root,x);
-//             break;
-            
-//         case 0:
-//             break;
-//         }
-
-//      } while(c!=0);
-  
-// }

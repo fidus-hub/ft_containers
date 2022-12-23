@@ -95,4 +95,98 @@ namespace ft
 	struct enable_if<true, T> { typedef T type; };
 
 
+	template<class T1, class T2> 
+    struct pair
+	{
+		typedef T1	first_type;
+		typedef T2	second_type;
+		first_type	first;
+		second_type	second;
+
+		pair() :first(first_type()),second(second_type()){};
+		template<class U, class V>
+		pair(const pair<U,V> &pr): first(pr.first), second(pr.second){}
+		pair (const T1 &a, const T2 &b): first(a), second(b){}
+		pair &operator=(const pair &other)
+		{
+			first = other.first;
+			second = other.second;
+			return *this; 
+		}
+    };
+
+
+template<class T> 
+const T& max(const T& a, const T& b)
+{
+	return (a < b) ? b : a;
 }
+
+// AVL tree my_node
+template <class Key, class T>
+struct my_node
+{
+	my_node* 				left;
+	my_node* 				right;
+	// int key;
+	ft::pair<const Key, T> *pair;
+	my_node* 				par;
+	int 					height;
+};
+
+    template<class T1, class T2>
+    bool operator==(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+       return lhs.first == rhs.first && lhs.second == rhs.second;
+    }
+
+    template<class T1, class T2>
+    bool operator!=(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+        return !(lhs==rhs);
+    }
+
+    template<class T1, class T2>
+    bool operator<(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+        return lhs.first<rhs.first || (!(rhs.first<lhs.first) && lhs.second<rhs.second);
+    }
+
+    template<class T1, class T2>
+    bool operator<=(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+       return !(rhs<lhs);
+    }
+
+    template<class T1, class T2>
+    bool operator>(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+        return rhs < lhs;
+    }
+    
+    template<class T1, class T2>
+    bool operator>=(const pair<T1, T2> &lhs, const pair<T1, T2>& rhs)
+    {
+        return !(lhs<rhs);
+    }
+    
+    template<class T1, class T2>
+    pair<T1, T2>make_pair(T1 x, T2 y)
+    { 
+        return (pair<T1, T2>(x, y));
+    };
+
+	 template<class InputIterator1, class InputIterator2, class Compare>
+    bool lexicographical_compare(InputIterator1 first, InputIterator1 last, InputIterator2 first2, InputIterator2 last2, Compare comp)
+    {
+        for ( ; (first != last) && (first2 != last2); ++first, (void) ++first2)
+        {
+            if (comp(*first, *first2))
+                return true;
+            if (comp(*first2, *first))
+                return false;
+        }
+        return (first == last) && (first2 != last2);
+    };
+
+};

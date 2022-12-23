@@ -51,7 +51,7 @@
 				buffer_[i] = *first;
 			}
 
-		Vector(const Vector<T,Allocator>& x)r
+		Vector(const Vector<T,Allocator>& x)
 		{
 			size_ = x.size_;
 			capacity_ = x.capacity_;

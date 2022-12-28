@@ -13,3 +13,5 @@ https://www.geeksforgeeks.org/avl-trees-containing-a-parent-node-pointer/
 https://www.youtube.com/watch?v=q4fnJZr8ztY&list=PLDV1Zeh2NRsD06x59fxczdWLhDDszUHKt&index=3
 
 https://www.guru99.com/avl-tree.html#2
+
+https://www.cs.usfca.edu/~galles/visualization/AVLtree.html

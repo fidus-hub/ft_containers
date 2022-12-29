@@ -30,3 +30,4 @@ set:
 	@$(COMPILER) $(FLAGS)	Set_tests.cpp -o set.out 
 clean:
 	rm -f vector.out map.out stack.out set.out
+fclean: clean

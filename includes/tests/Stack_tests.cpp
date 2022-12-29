@@ -11,9 +11,9 @@
 /* ************************************************************************************************ */
 
 // you should include your path to this files
-#include "../includes/Stack.hpp"
-//#include "../includes/Vector.hpp"
-//#include "../utility/pair.hpp"  // path to ft::pair.
+#include "../stack.hpp"
+//#include "../vector.hpp"
+//#include "../utils/pair.hpp"  // path to ft::pair.
 
 #include <vector>
 #include <stack>

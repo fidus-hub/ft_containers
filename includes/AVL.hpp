@@ -50,13 +50,12 @@ class AVL
 		return root;
 	}
 
-	node_type* Delete(node_type* root,pair _pair)
+		node_type* Delete(node_type* root,pair _pair)
 	{
 		if (root == NULL)
 			return NULL;
 		else
-		{	
-			if (root->pair->first != _pair.first)
+		{	if (root->pair->first != _pair.first)
 			{
 				if (_comp(root->pair->first, _pair.first))
 					root->right = Delete(root->right, _pair);
@@ -105,41 +104,24 @@ class AVL
 					}
 					if (root->par != NULL)
 						UpdateHeight(root->par);
-					if (root && root->pair) {
-						Pair_All.destroy(root->pair);
-						Pair_All.deallocate(root->pair, 1);
-						Node_All.destroy(root);
-						Node_All.deallocate(root, 1);
-						return NULL;
-					}
+					root = NULL;
+					return NULL;
 				}
 
 				else 
 				{
-					pair*	tmppair = nullptr;
-					node_type* tmp = nullptr;
 					node_type* tmpnode = root;
 					tmpnode = tmpnode->right;
 					while (tmpnode->left != NULL) 
 						tmpnode = tmpnode->left;
-					tmp = tmpnode;
+
 					pair *val =  tmpnode->pair;
+
 					root->right = Delete(root->right, *tmpnode->pair);
-					tmppair = root->pair;
+
 					root->pair = val;
-					if (tmppair) {
-					Pair_All.destroy(tmppair);
-					Pair_All.deallocate(tmppair, 1);
-					}
-					if (tmp->pair) {
 
-					Pair_All.destroy(tmp->pair);
-					Pair_All.deallocate(tmp->pair, 1);
-					}
-					Node_All.destroy(tmp);
-					Node_All.deallocate(tmp, 1);
 					root = Balance(root);
-
 				}
 			}
 			if (root != NULL)
